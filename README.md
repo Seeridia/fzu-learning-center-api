@@ -5,7 +5,7 @@
 > 1. 请勿滥用，本项目仅用于学习和测试！
 > 2. 部分信息可能是错误（有些字段就是 AI 猜的）的或未经过不同情况的验证，仅供参考。
 
-文档链接：https://api-learning-center.seeridia.top （目前还在施工）
+文档链接：https://api.seeridia.top （目前还在施工）
 
 ## 预约 addSpaceAppoint
 
