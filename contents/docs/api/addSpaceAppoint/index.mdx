@@ -19,19 +19,19 @@ POST https://aiot.fzu.edu.cn/api/ibs/spaceAppoint/app/addSpaceAppoint
 
 | 参数名    | 类型   | 必填 | 描述         | 备注             |
 | --------- | ------ | ---- | ------------ | ---------------- |
-| spaceId   | string | 是   | 座位号       | 示例：422        |
+| **spaceId**   | string | 是   | **座位编号**       | 示例：422        |
 | beginTime | string | 是   | 预约开始时间 | 格式：HH:mm      |
 | endTime   | string | 是   | 预约结束时间 | 格式：HH:mm      |
 | date      | string | 是   | 预约日期     | 格式：YYYY-MM-DD |
 
 <Note type="warning" title="Warning">
-`spaceId` 是不同于我们看到的编号，是另一个号码，我们熟知的编号一般是 `spaceName`，对照表放在 [这里](/docs/appendix/seatIDReferenceTable)
+`spaceId` 是不同于我们看到的编号，是另一个号码，我们熟知的编号一般是 `spaceName`，对照表放在 [这里](/docs/appendix/seatIDReferenceTable)，你也可以在 [这里](/docs/appendix/seatIdConversionTool) 找到一个转换工具
 </Note>
 
 
 <Note type="note" title="Note">
 1. 预约时间不得超过 4.5 小时，不同于 APP 中的 4 小时限制
-2. 结束时间
+2. 开始时间和结束时间可以不在 8:00-22:30 之间
 </Note>
 
 ## 响应参数
@@ -54,7 +54,7 @@ POST https://aiot.fzu.edu.cn/api/ibs/spaceAppoint/app/addSpaceAppoint
     - 预约时间大于 4.5 小时：`预约时间不合理,请重新选择!`
     - 结束时间小于开始时间：`系统异常`
     - 时间不是整点或半整点：`时间格式不正确`
-    - 错误的座位号：`预约空间不存在!`
+    - 错误的座位编号：`预约空间不存在!`
     - 预约成功：`成功`
 
 
