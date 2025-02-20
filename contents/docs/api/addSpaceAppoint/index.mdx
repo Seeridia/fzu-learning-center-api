@@ -1,0 +1,109 @@
+---
+title: addSpaceAppoint 预约
+description: 对座位进行预约
+---
+
+## 请求 URL
+
+```http
+POST https://aiot.fzu.edu.cn/api/ibs/spaceAppoint/app/addSpaceAppoint
+```
+
+## 请求头
+
+| 参数名 | 类型   | 必填 | 描述         |
+| ------ | ------ | ---- | ------------ |
+| token  | string | 是   | 用户认证令牌 |
+
+## 请求参数
+
+| 参数名    | 类型   | 必填 | 描述         | 备注             |
+| --------- | ------ | ---- | ------------ | ---------------- |
+| spaceId   | string | 是   | 座位号       | 示例：422        |
+| beginTime | string | 是   | 预约开始时间 | 格式：HH:mm      |
+| endTime   | string | 是   | 预约结束时间 | 格式：HH:mm      |
+| date      | string | 是   | 预约日期     | 格式：YYYY-MM-DD |
+
+<Note type="warning" title="Warning">
+`spaceId` 是不同于我们看到的编号，是另一个号码，我们熟知的编号一般是 `spaceName`，对照表放在 [这里](/docs/appendix/seatIDReferenceTable)
+</Note>
+
+
+<Note type="note" title="Note">
+1. 预约时间不得超过 4.5 小时，不同于 APP 中的 4 小时限制
+2. 结束时间
+</Note>
+
+## 响应参数
+
+| 参数名      | 类型   | 描述                   | 备注                   |
+| ----------- | ------ | ---------------------- | ---------------------- |
+| data        | object | 数据对象 |  通常为null |
+| dataList    | object | 数据列表 | 通常为null |
+| pageIndex   | int    | 页码 | 通常为null |
+| pageSize    | int    | 每页大小 | 通常为null |
+| currentPage | int    | 当前页码 | 通常为null |
+| total       | int    | 总记录数 | 通常为null |
+| code        | string | 响应代码 |  |
+| msg         | string | 响应消息 |  |
+| otherData   | object | 其他数据 | 通常为null |
+
+- `code` 为 `0` 时表示成功，`1001` 和 `-1` 时表示失败。
+- `msg` 为响应消息。
+    - 该座位已被预约：`所选空间已被预约，请重新选择!`
+    - 预约时间大于 4.5 小时：`预约时间不合理,请重新选择!`
+    - 结束时间小于开始时间：`系统异常`
+    - 时间不是整点或半整点：`时间格式不正确`
+    - 错误的座位号：`预约空间不存在!`
+    - 预约成功：`成功`
+
+
+## 请求示例
+
+```json
+{
+    "spaceId": "200",
+    "beginTime": "08:00",
+    "endTime": "09:00",
+    "date": "2021-09-01"
+}
+```
+
+## 响应示例
+
+```json
+{
+    "data": null,
+    "dataList": null,
+    "pageIndex": null,
+    "pageSize": null,
+    "currentPage": null,
+    "total": null,
+    "code": "0",
+    "msg": "预约成功",
+    "otherData": null
+}
+```
+
+## 代码示例
+
+```python
+import requests
+
+url = "https://aiot.fzu.edu.cn/api/ibs/spaceAppoint/app/addSpaceAppoint"
+
+payload = {
+    "spaceId": "200",
+    "beginTime": "08:00",
+    "endTime": "09:00",
+    "date": "2021-09-01"
+}
+
+headers = {
+    "token": "your token"
+}
+
+response = requests.post(url, json=payload, headers=headers)
+
+print(response.json())
+```
