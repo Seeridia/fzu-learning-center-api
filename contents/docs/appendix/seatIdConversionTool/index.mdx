@@ -3,7 +3,7 @@ title: Seat ID Conversion Tool
 description: 用以将座位ID转换为座位号的工具
 ---
 
-程序会检索本地的 `seatIDReferenceTable.csv` 文件，如果不存在则会从 [GitHub](https://raw.githubusercontent.com/Seeridia/fzu-learning-center-api/main/source/seatIDReferenceTable.csv) 获取。
+程序会检索同目录下的 `seatIDReferenceTable.csv` 文件，如果不存在则会从 [GitHub](https://raw.githubusercontent.com/Seeridia/fzu-learning-center-api/main/source/seatIDReferenceTable.csv) 获取。
 
 ```python:IDConversion.py
 import pandas as pd

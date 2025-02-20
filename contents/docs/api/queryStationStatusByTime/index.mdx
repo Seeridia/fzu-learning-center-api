@@ -1,6 +1,156 @@
 ---
 title: queryStationStatusByTime 查询座位状态
-description: 
+description: 施工中...(内容未经校验)
 ---
 
-正在施工中...
+## 请求 URL
+
+```http
+POST https://aiot.fzu.edu.cn/api/ibs/spaceAppoint/app/queryStationStatusByTime
+```
+
+## 请求头
+| 参数名 | 类型   | 必填 | 描述         |
+| ------ | ------ | ---- | ------------ |
+| token  | string | 是   | 用户认证令牌 |
+
+## 请求参数
+| 参数名    | 类型   | 必填 | 描述                                   |
+| --------- | ------ | ---- | -------------------------------------- |
+| beginTime | string | 是   | 查询开始时间（格式：YYYY-MM-DD HH:mm） |
+| endTime   | string | 是   | 查询结束时间（格式：YYYY-MM-DD HH:mm） |
+| floorLike | string | 是   | 楼层编号                               |
+| parentId  | object | 否   | 父ID（通常为null）                     |
+| region    | int    | 是   | 区域编号                               |
+
+## 响应参数
+
+### 响应数据结构
+
+| 参数名      | 类型   | 描述                   |
+| ----------- | ------ | ---------------------- |
+| data        | object | 数据对象（通常为null） |
+| dataList    | array  | 座位状态列表           |
+| pageIndex   | object | 当前页码（通常为null） |
+| pageSize    | object | 每页数量（通常为null） |
+| currentPage | object | 最大页码（通常为null） |
+| total       | object | 总记录数（通常为null） |
+| code        | string | 响应代码（0表示成功）  |
+| msg         | string | 响应消息               |
+| otherData   | object | 其他数据（通常为null） |
+
+### `dataList` 字段说明
+
+
+| 字段名          | 类型   | 描述                       |
+| --------------- | ------ | -------------------------- |
+| id              | int    | 座位编号                   |
+| spaceCode       | string | 座位编码                   |
+| spaceName       | string | **座位号**                 |
+| spaceType       | object | 空间类型（通常为null）     |
+| parentId        | object | 父ID（通常为null）         |
+| plan            | object | 计划信息（通常为null）     |
+| planUrl         | object | 计划URL（通常为null）      |
+| open            | string | 开放时间（格式：HH:mm）    |
+| close           | object | 关闭时间（通常为null）     |
+| capacity        | object | 容量（通常为null）         |
+| defaultNum      | object | 默认数量（通常为null）     |
+| role            | object | 角色（通常为null）         |
+| auditRole       | object | 审核角色（通常为null）     |
+| device          | object | 设备信息（通常为null）     |
+| deviceCode      | object | 设备编码（通常为null）     |
+| otherDevice     | object | 其他设备（通常为null）     |
+| appoint         | object | 预约信息（通常为null）     |
+| qrcode          | object | 二维码信息（通常为null）   |
+| floor           | string | 楼层编号                   |
+| region          | int    | 区域编号                   |
+| automatic       | object | 自动信息（通常为null）     |
+| doorId          | object | 门ID（通常为null）         |
+| forbidTimeBegin | object | 禁止开始时间（通常为null） |
+| forbidTimeEnd   | object | 禁止结束时间（通常为null） |
+| appointmentType | object | 预约类型（通常为null）     |
+| regionName      | string | 区域名称                   |
+| spaceStatus     | int    | 座位状态（0表示可用）      |
+| future          | object | 未来信息（通常为null）     |
+| total           | object | 总数（通常为null）         |
+| seatSum         | object | 座位总数（通常为null）     |
+| seatCode        | object | 座位编码（通常为null）     |
+| seatVoList      | object | 座位列表（通常为null）     |
+| deviceId        | object | 设备ID（通常为null）       |
+| deviceList      | object | 设备列表（通常为null）     |
+
+## 响应示例
+```json
+{
+    "data": null,
+    "dataList": [
+        {
+            "id": 294,
+            "spaceCode": "4L161",
+            "spaceName": "009",
+            "spaceType": null,
+            "parentId": null,
+            "plan": null,
+            "planUrl": null,
+            "open": "08:00",
+            "close": null,
+            "capacity": null,
+            "defaultNum": null,
+            "role": null,
+            "auditRole": null,
+            "device": null,
+            "deviceCode": null,
+            "otherDevice": null,
+            "appoint": null,
+            "qrcode": null,
+            "floor": "4",
+            "region": 1,
+            "automatic": null,
+            "doorId": null,
+            "forbidTimeBegin": null,
+            "forbidTimeEnd": null,
+            "appointmentType": null,
+            "regionName": "学习中心",
+            "spaceStatus": 0,
+            "future": null,
+            "total": null,
+            "seatSum": null,
+            "seatCode": null,
+            "seatVoList": null,
+            "deviceId": null,
+            "deviceList": null
+        }
+    ],
+    "pageIndex": null,
+    "pageSize": null,
+    "currentPage": null,
+    "total": null,
+    "code": "0",
+    "msg": "成功",
+    "otherData": null
+}
+```
+
+## 代码示例
+
+```python
+import requests
+
+url = "https://aiot.fzu.edu.cn/api/ibs/spaceAppoint/app/queryStationStatusByTime"
+
+payload = {
+    "beginTime": "2021-09-01 08:00",
+    "endTime": "2021-09-01 09:00",
+    "floorLike": "4",
+    "parentId": null,
+    "region": 1
+}
+
+headers = {
+    "token": "your token"
+}
+
+response = requests.request("POST", url, headers=headers, data=payload)
+
+print(response.json())
+```
