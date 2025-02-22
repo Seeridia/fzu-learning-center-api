@@ -18,6 +18,7 @@ export const ROUTES: EachRoute[] = [
       { title: "revocationAppointApp", href: "/revocationAppointApp" },
       { title: "queryMyAppoint", href: "/queryMyAppoint" },
       { title: "queryStationStatusByTime", href: "/queryStationStatusByTime" },
+      { title: "Seat Sign In", href: "/seatSignIn" },
     ],
   },
   {
@@ -27,7 +28,6 @@ export const ROUTES: EachRoute[] = [
     items: [
       { title: "Seat ID Reference Table", href: "/seatIdReferenceTable" },
       { title: "Seat ID Conversion Tool", href: "/seatIdConversionTool" },
-      { title: "Seat Sign In Code", href: "/seatSignInCode" },
     ],
   },
 ];

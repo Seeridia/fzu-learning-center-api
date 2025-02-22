@@ -1,0 +1,72 @@
+---
+title: Seat Sign In
+description: 
+---
+
+## 请求 URL
+
+```http
+POST https://aiot.fzu.edu.cn/api/ibs/station/app/signIn
+```
+
+## 请求头
+
+| 参数名 | 类型   | 必填 | 描述         |
+| ------ | ------ | ---- | ------------ |
+| token  | string | 是   | 用户认证令牌 |
+
+## 请求参数
+
+| 参数名 | 类型   | 必填 | 描述         |
+| ------ | ------ | ---- | ------------ |
+| id     | string | 是   | 预约记录的ID |
+
+<Note type="note" title="Note">
+可以在预约历史中查看到预约记录的ID
+</Note>
+
+## 响应参数
+
+| 参数名      | 类型   | 描述                   |
+| ----------- | ------ | ---------------------- |
+| data        | object | 数据对象（通常为null） |
+| dataList    | object | 数据列表（通常为null） |
+| pageIndex   | int    | 页码（通常为null）     |
+| pageSize    | int    | 每页大小（通常为null） |
+| currentPage | int    | 当前页码（通常为null） |
+| total       | int    | 总记录数（通常为null） |
+| code        | string | 响应代码        |
+| msg         | string | 响应消息               |
+| otherData   | object | 其他数据（通常为null） |
+
+- `msg`
+    - 签到成功: `成功`
+    - 未到签到时间: `签到时间未到（可以提前15分钟签到）`
+
+## 请求示例
+
+```json
+{
+    "id": "123456"
+}
+```
+
+## 代码示例
+
+```python
+import requests
+
+url = "https://aiot.fzu.edu.cn/api/ibs/station/app/signIn"
+
+payload = {
+    "id": "123456"
+}
+
+headers = {
+    'token': 'your_token_here'
+}
+
+response = requests.post(url, json=payload, headers=headers)
+
+print(response.json())
+```
