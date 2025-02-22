@@ -27,6 +27,7 @@ export const ROUTES: EachRoute[] = [
     items: [
       { title: "Seat ID Reference Table", href: "/seatIdReferenceTable" },
       { title: "Seat ID Conversion Tool", href: "/seatIdConversionTool" },
+      { title: "Seat Sign In Code", href: "/seatSignInCode" },
     ],
   },
 ];
