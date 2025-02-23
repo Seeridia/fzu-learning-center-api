@@ -3,6 +3,10 @@ title: revocationAppointApp 撤销预约
 description: 施工中...(内容未经校验)
 ---
 
+<Note type="note" title="Note">
+签到、签退、取消 这三个的请求相似，参数都是只有一个 `id`
+</Note>
+
 ## 请求 URL
 
 ```http
@@ -22,7 +26,7 @@ POST https://aiot.fzu.edu.cn/api/ibs/spaceAppoint/app/revocationAppointApp
 | id     | string | 是   | 预约记录的ID |
 
 <Note type="note" title="Note">
-可以在预约历史中查看到预约记录的ID
+可在预约历史中查看到预约记录的ID
 </Note>
 
 ## 响应参数

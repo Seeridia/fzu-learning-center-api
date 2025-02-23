@@ -19,6 +19,8 @@ export const ROUTES: EachRoute[] = [
       { title: "queryMyAppoint", href: "/queryMyAppoint" },
       { title: "queryStationStatusByTime", href: "/queryStationStatusByTime" },
       { title: "signIn", href: "/signIn" },
+      { title: "signOut", href: "/signOut" },
+
     ],
   },
   {
@@ -28,6 +30,7 @@ export const ROUTES: EachRoute[] = [
     items: [
       { title: "Seat ID Reference Table", href: "/seatIdReferenceTable" },
       { title: "Seat ID Conversion Tool", href: "/seatIdConversionTool" },
+      { title: "Token Obtain", href: "/tokenObtain" },
     ],
   },
 ];

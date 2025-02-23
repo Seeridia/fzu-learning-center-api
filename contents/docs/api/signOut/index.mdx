@@ -1,0 +1,58 @@
+---
+title: signOut 签退
+description: 
+---
+
+## 请求 URL
+
+```http
+POST https://aiot.fzu.edu.cn/api/ibs/station/app/signOut
+```
+
+## 请求头
+
+| 参数名 | 类型   | 必填 | 描述         |
+| ------ | ------ | ---- | ------------ |
+| token  | string | 是   | 用户认证令牌 |
+
+## 请求参数
+
+| 参数名 | 类型   | 必填 | 描述         |
+| ------ | ------ | ---- | ------------ |
+| id     | string | 是   | 预约记录的ID |
+
+<Note type="note" title="Note">
+可在预约历史中查看到预约记录的ID
+</Note>
+
+## 响应参数
+
+（忘了记录下来了，之后补）
+
+## 请求示例
+
+```json
+{
+    "id": "123456"
+}
+```
+
+## 代码示例
+
+```python
+import requests
+
+url = "https://aiot.fzu.edu.cn/api/ibs/station/app/signOut"
+
+payload = {
+    "id": "123456"
+}
+
+headers = {
+    'token': 'your_token_here'
+}
+
+response = requests.post(url, json=payload, headers=headers)
+
+print(response.json())
+```
