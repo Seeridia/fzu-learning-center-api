@@ -24,6 +24,14 @@ POST https://aiot.fzu.edu.cn/api/ibs/spaceAppoint/app/queryMyAppoint
 | auditStatus | string | 否   | 审核状态（默认为空）            |
 | spaceName   | string | 否   | 空间名称（默认为空）            |
 
+- `auditStatus`
+  - `0`: 审核中（没用）
+  - `1`: 未通过（没用）
+  - `2`: 可签到（貌似没有生效?）
+  - `3`: 已取消
+  - `4`: 已失效、已完成
+  - `5`: 已完成
+
 ## 响应参数
 
 ### 响应数据结构
@@ -77,6 +85,13 @@ POST https://aiot.fzu.edu.cn/api/ibs/spaceAppoint/app/queryMyAppoint
 | oldId              | object | 未知字段（通常为null）                |
 | isUpdate           | object | 未知字段（通常为null）                |
 
+- `auditStatus`
+  - `2`: 待签到/已签到
+  - `3`: 已取消
+  - `4`: 已完成
+- `sign`
+  - `True`: 已签到
+  - `False`: 未签到
 
 ### 响应示例
 ```json

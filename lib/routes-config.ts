@@ -18,6 +18,7 @@ export const ROUTES: EachRoute[] = [
       { title: "revocationAppointApp", href: "/revocationAppointApp" },
       { title: "queryMyAppoint", href: "/queryMyAppoint" },
       { title: "queryStationStatusByTime", href: "/queryStationStatusByTime" },
+      { title: "querySpaceAppointTime", href: "/querySpaceAppointTime" },
       { title: "signIn", href: "/signIn" },
       { title: "signOut", href: "/signOut" },
 

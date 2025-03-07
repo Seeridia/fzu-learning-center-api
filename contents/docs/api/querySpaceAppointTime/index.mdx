@@ -1,0 +1,112 @@
+---
+title: querySpaceAppointTime 座位预约情况（分时间段）
+description: 
+---
+
+## 请求 URL
+
+```http
+POST https://aiot.fzu.edu.cn/api/ibs/spaceAppoint/app/querySpaceAppointTime
+```
+
+## 请求头
+
+| 参数名 | 类型   | 必填 | 描述         |
+| ------ | ------ | ---- | ------------ |
+| token  | string | 是   | 用户认证令牌 |
+
+## 请求参数
+
+| 参数名    | 类型   | 必填 | 描述         | 备注             |
+| --------- | ------ | ---- | ------------ | ---------------- |
+| **spaceId**   | string | 是   | **座位编号**       | 示例：422        |
+| date      | string | 是   | 预约日期     | 格式：YYYY-MM-DD |
+
+## 响应参数
+
+| 参数名 | 类型 | 描述 |
+| ------ | ---- | ---- |
+| data | object | 座位预约数据 |
+| data.spaceId | number | 座位编号 |
+| data.date | string | 日期时间 |
+| data.timeDiamondList | array | 时间段列表 |
+| data.timeDiamondList[].index | number | 时间段索引 |
+| data.timeDiamondList[].timeText | string | 时间文本 |
+| data.timeDiamondList[].occupy | number | 占用状态（0-未占用，1-已占用） |
+| data.timeDiamondList[].isChecked | boolean |  |
+| code | string | 响应代码，"0"表示成功 |
+| msg | string | 响应消息 |
+| dataList | null | 数据列表（通常为null） |
+| pageIndex | null | 页码（通常为null） |
+| pageSize | null | 每页大小（通常为null） |
+| currentPage | null | 当前页码（通常为null） |
+| total | null | 总记录数（通常为null） |
+| otherData | null | 其他数据（通常为null） |
+
+
+- 'isChecked'
+    - 在未到来的时间段中，表示是否被预约
+        - `True` - 已被预约
+        - `False` - 未被预约
+    - 在已到来的时间段中，固定为 `True`
+
+
+## 请求示例
+
+```json
+{
+    "spaceId": "549",
+    "date": "2025-03-08",
+}
+```
+
+## 响应示例
+
+```json
+{
+    "data": {
+        "spaceId": 549,
+        "date": "2025-03-08 00:00:00",
+        "timeDiamondList": [
+            { "index": 16, "timeText": "08:00", "occupy": 0, "isChecked": false },
+            { "index": 17, "timeText": "08:30", "occupy": 0, "isChecked": false },
+            { "index": 18, "timeText": "09:00", "occupy": 1, "isChecked": true },
+            { "index": 19, "timeText": "09:30", "occupy": 1, "isChecked": true },
+            { "index": 20, "timeText": "10:00", "occupy": 1, "isChecked": true },
+            { "index": 21, "timeText": "10:30", "occupy": 1, "isChecked": true },
+            { "index": 22, "timeText": "11:00", "occupy": 1, "isChecked": true },
+            { "index": 23, "timeText": "11:30", "occupy": 1, "isChecked": true },
+            { "index": 24, "timeText": "12:00", "occupy": 1, "isChecked": true },
+            { "index": 25, "timeText": "12:30", "occupy": 0, "isChecked": false },
+            { "index": 26, "timeText": "13:00", "occupy": 0, "isChecked": false },
+            { "index": 27, "timeText": "13:30", "occupy": 0, "isChecked": false },
+            { "index": 28, "timeText": "14:00", "occupy": 0, "isChecked": false },
+            { "index": 29, "timeText": "14:30", "occupy": 0, "isChecked": false },
+            { "index": 30, "timeText": "15:00", "occupy": 1, "isChecked": true },
+            { "index": 31, "timeText": "15:30", "occupy": 1, "isChecked": true },
+            { "index": 32, "timeText": "16:00", "occupy": 1, "isChecked": true },
+            { "index": 33, "timeText": "16:30", "occupy": 1, "isChecked": true },
+            { "index": 34, "timeText": "17:00", "occupy": 1, "isChecked": true },
+            { "index": 35, "timeText": "17:30", "occupy": 1, "isChecked": true },
+            { "index": 36, "timeText": "18:00", "occupy": 1, "isChecked": true },
+            { "index": 37, "timeText": "18:30", "occupy": 1, "isChecked": true },
+            { "index": 38, "timeText": "19:00", "occupy": 1, "isChecked": true },
+            { "index": 39, "timeText": "19:30", "occupy": 0, "isChecked": false },
+            { "index": 40, "timeText": "20:00", "occupy": 0, "isChecked": false },
+            { "index": 41, "timeText": "20:30", "occupy": 0, "isChecked": false },
+            { "index": 42, "timeText": "21:00", "occupy": 0, "isChecked": false },
+            { "index": 43, "timeText": "21:30", "occupy": 0, "isChecked": false },
+            { "index": 44, "timeText": "22:00", "occupy": 0, "isChecked": false },
+            { "index": 45, "timeText": "22:30", "occupy": 0, "isChecked": false }
+        ]
+    },
+    "dataList": null,
+    "pageIndex": null,
+    "pageSize": null,
+    "currentPage": null,
+    "total": null,
+    "code": "0",
+    "msg": "成功",
+    "otherData": null
+}
+```
