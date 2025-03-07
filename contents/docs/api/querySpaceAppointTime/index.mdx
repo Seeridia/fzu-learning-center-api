@@ -1,6 +1,6 @@
 ---
-title: querySpaceAppointTime 座位预约情况（分时间段）
-description: 
+title: querySpaceAppointTime 座位预约情况
+description: 分时间段
 ---
 
 ## 请求 URL
@@ -28,7 +28,7 @@ POST https://aiot.fzu.edu.cn/api/ibs/spaceAppoint/app/querySpaceAppointTime
 | ------ | ---- | ---- |
 | data | object | 座位预约数据 |
 | data.spaceId | number | 座位编号 |
-| data.date | string | 日期时间 |
+| data.date | string | 日期 |
 | data.timeDiamondList | array | 时间段列表 |
 | data.timeDiamondList[].index | number | 时间段索引 |
 | data.timeDiamondList[].timeText | string | 时间文本 |
