@@ -8,5 +8,3 @@
 > 4. 部分信息可能是错误（有些字段的描述就是 AI 猜的）的或未经过不同情况的验证，仅供参考。
   
 文档链接：https://api.seeridia.top
-
-基于本项目的 [FZU 学习中心预约工具](https://github.com/Seeridia/fzu-learning-center-tool) 已经上线
