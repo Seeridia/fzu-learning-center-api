@@ -7,8 +7,6 @@ description:
 
 你也可以前往 [这里](https://raw.githubusercontent.com/Seeridia/fzu-learning-center-api/main/source/seatIdReferenceTable.csv) 下载该 csv 文件
 
-你也可以使用 [这里](/docs/appendix/seatIdConversionTool) 的工具来进行座位号和座位 ID 的转换
-
 | id/spaceId | spaceCode | spaceName | floor |
 | ---------- | --------- | --------- | ----- |
 | 422        | 4K001     | 1         | 4     |
@@ -922,3 +920,20 @@ description:
 | 590        | 5B929     | 917       | 5     |
 | 588        | 5B927     | 918       | 5     |
 | 586        | 5B925     | 919       | 5     |
+
+## 异常座位名录
+
+> 唐完了
+
+1. 797 有两个对应的 spaceName，分别是 796-1（spaceId 1247） 和 797（spaceId 1243）
+
+2. 800 有两个对应的 spaceName，分别是 799-1（spaceId 1248） 和 800（spaceId 1257）
+
+智汇福大的处理是采用 796-1 和 799-1，虽然后者也被相关接口能够正常出现
+
+以及下面四个 spaceName 也有问题，但是由于无法预约，所以可以不管
+
+- 045-1
+- 045-2
+- 108-1
+- 108-2

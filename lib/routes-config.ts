@@ -9,19 +9,25 @@ export type EachRoute = {
 
 export const ROUTES: EachRoute[] = [
   {
+    title: "介绍",
+    href: "/introduction",
+  },
+  {
+    title: "鉴权",
+    href: "/token",
+  },
+  {
     title: "API",
     href: "/api",
     noLink: true,
     items: [
-      { title: "Introduction", href: "/introduction" },
-      { title: "addSpaceAppoint", href: "/addSpaceAppoint" },
-      { title: "revocationAppointApp", href: "/revocationAppointApp" },
-      { title: "queryMyAppoint", href: "/queryMyAppoint" },
-      { title: "queryStationStatusByTime", href: "/queryStationStatusByTime" },
-      { title: "querySpaceAppointTime", href: "/querySpaceAppointTime" },
-      { title: "signIn", href: "/signIn" },
-      { title: "signOut", href: "/signOut" },
-
+      { title: "签到", href: "/signIn" },
+      { title: "退出登录", href: "/signOut" },
+      { title: "添加预约", href: "/addSpaceAppoint" },
+      { title: "取消预约", href: "/revocationAppointApp" },
+      { title: "预约历史", href: "/queryMyAppoint" },
+      { title: "查询全场预约情况", href: "/queryStationStatusByTime" },
+      { title: "查询特定座位情况", href: "/querySpaceAppointTime" },
     ],
   },
   {
@@ -30,8 +36,6 @@ export const ROUTES: EachRoute[] = [
     noLink: true,
     items: [
       { title: "Seat ID Reference Table", href: "/seatIdReferenceTable" },
-      { title: "Seat ID Conversion Tool", href: "/seatIdConversionTool" },
-      { title: "Token Obtain", href: "/tokenObtain" },
     ],
   },
 ];

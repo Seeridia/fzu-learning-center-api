@@ -1,0 +1,46 @@
+---
+title: Introduction
+description: 
+---
+
+<Note type="warning" title="Note">
+1. 请勿滥用，本项目仅用于学习和测试！
+2. 利用本项目提供的接口、文档等造成不良影响及后果与本人无关
+3. 上传任何信息时请注意脱敏，特别是 `token` 值
+</Note>
+
+<Note type="note" title="Note">
+部分信息可能是错误（有些字段的描述就是 AI 猜的）的或未经过不同情况的验证，仅供参考
+</Note>
+
+**这是 福州大学 学习中心 的相关接口文档**
+
+## 说明
+
+1. 【重要】 `spaceId` 是不同于我们看到的编号，是另一个号码，现场的编号一般是 `spaceName`，而主要用于接口参数的是 `spaceId`，对照表放在 [这里](/docs/appendix/seatIdReferenceTable)，或可以从 [这里](https://raw.githubusercontent.com/Seeridia/fzu-learning-center-api/main/source/seatIdReferenceTable.csv) 下载
+
+2. 接口的 `token` 是通过登录获取的，具体获取方式请查看 [这里](/docs/appendix/tokenObtain)
+
+3. 接口存在速率限制，过快的请求会被拒绝，具体限制未知
+
+## 异常座位名录
+
+> 唐完了
+
+1. 797 有两个对应的 spaceName，分别是 796-1（spaceId 1247） 和 797（spaceId 1243）
+
+2. 800 有两个对应的 spaceName，分别是 799-1（spaceId 1248） 和 800（spaceId 1257）
+
+智汇福大的处理是采用 796-1 和 799-1，虽然后者也被相关接口能够正常出现
+
+以及下面四个 spaceName 也有问题，但是由于无法预约，所以可以不管
+
+- 045-1
+- 045-2
+- 108-1
+- 108-2
+
+
+## 学习中心导览图
+
+![学习中心导览图](https://aiot.fzu.edu.cn/ibs/assets/seatGuide-88e54b3b.jpg)

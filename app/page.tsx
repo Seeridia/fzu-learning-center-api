@@ -13,7 +13,7 @@ export default function Home() {
       </h1>
       <div className="mt-16"> {}
         <Link
-          href={`/docs${page_routes[0].href}`}
+          href={`/docs/introduction`}
           className={buttonVariants({
             className: "px-6 !font-medium",
             size: "lg",
