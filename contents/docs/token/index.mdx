@@ -9,293 +9,111 @@ description:
 
 ### 通过脚本获取
 
-```python
-# Python
-
-import re
-import base64
-import requests
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad
-
-SSO_URL = "https://sso.fzu.edu.cn/login"
-AUTH_URL = "https://sso.fzu.edu.cn/oauth2.0/authorize?response_type=code&client_id=wlwxt&redirect_uri=http://aiot.fzu.edu.cn/api/admin/sso/getIbsToken"
-USER_AGENT = 'Mozilla/5.0 (iPad; CPU OS 18_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 appId/cn.edu.fzu.fdxypa appScheme/kysk-fdxy-app hengfeng/fdxyappzs appType/2 ruijie-facecamera'
-
-class SSOLogin:
-    """福州大学 SSO 登录类，用于获取学习中心 token"""
-    
-    def __init__(self):
-        self.session = requests.Session()
-        self.session.headers.update({'User-Agent': USER_AGENT})
-    
-    def extract_kv(self, raw_text, key):
-        """从字符串中提取键值对"""
-        if not isinstance(raw_text, str):
-            raise ValueError("输入必须是字符串")
-        
-        pattern = rf'{key}=([^;&]+)'
-        match = re.search(pattern, raw_text)
-        if not match:
-            raise ValueError(f"未找到键: {key}")
-        return match.group(1)
-    
-    def encrypt_password(self, raw_password, key_base64):
-        """使用 AES-ECB 模式加密密码"""
-        key = base64.b64decode(key_base64)
-        cipher = AES.new(key, AES.MODE_ECB)
-        padded = pad(raw_password.encode('utf-8'), AES.block_size)
-        encrypted = cipher.encrypt(padded)
-        return base64.b64encode(encrypted).decode('utf-8')
-    
-    def login(self, account, password):
-        """SSO 登录，返回 cookie"""
-        if not account or not password:
-            raise ValueError("账号密码不能为空")
-        
-        # 获取登录页面
-        response = self.session.get(SSO_URL)
-        html = response.text
-        
-        # 提取密钥和 execution
-        crypto_match = re.search(r'"login-croypto">(.*?)<', html)
-        execution_match = re.search(r'"login-page-flowkey">(.*?)<', html)
-        if not crypto_match or not execution_match:
-            raise ValueError("无法从页面中提取密钥")
-        
-        crypto = crypto_match.group(1)
-        execution = execution_match.group(1)
-        
-        # 提取 SESSION cookie
-        set_cookie = response.headers.get('Set-Cookie', '')
-        session_cookie = self.extract_kv(set_cookie, 'SESSION')
-        
-        # 构建登录数据
-        encrypted_password = self.encrypt_password(password, crypto)
-        login_data = {
-            'username': account,
-            'type': 'UsernamePassword',
-            '_eventId': 'submit',
-            'geolocation': '',
-            'execution': execution,
-            'captcha_code': '',
-            'croypto': crypto,
-            'password': encrypted_password,
-            'captcha_payload': self.encrypt_password('{}', crypto)
-        }
-        
-        # 发送登录请求
-        headers = {'Content-Type': 'application/x-www-form-urlencoded', 'Cookie': f'SESSION={session_cookie}'}
-        response = self.session.post(SSO_URL, data=login_data, headers=headers)
-        
-        # 查找 SOURCEID_TGC
-        for cookie in self.session.cookies:
-            if cookie.name == 'SOURCEID_TGC':
-                return f'SOURCEID_TGC={cookie.value}'
-        raise ValueError('学号或密码错误')
-    
-    def get_study_token(self, sso_cookie):
-        """获取学习中心 token"""
-        if not sso_cookie:
-            raise ValueError("SSO cookie 不能为空，请先登录")
-        
-        headers = {'Cookie': sso_cookie, 'User-Agent': USER_AGENT}
-        response = self.session.get(AUTH_URL, headers=headers, allow_redirects=True)
-        
-        final_url = response.url
-        if 'token=' in final_url:
-            return self.extract_kv(final_url, 'token')
-        raise ValueError("最终重定向URL中未找到token")
-    
-    def get_learning_center_token(self, account, password):
-        """完整的获取学习中心 token 流程"""
-        sso_cookie = self.login(account, password)
-        return self.get_study_token(sso_cookie)
-
-def main():
-    import argparse
-    parser = argparse.ArgumentParser(description="获取学习中心 token（SSO 登录）")
-    parser.add_argument("--username", "-u", required=True, help="学号")
-    parser.add_argument("--password", "-p", required=True, help="密码")
-    args = parser.parse_args()
-    
-    sso = SSOLogin()
-    try:
-        token = sso.get_learning_center_token(args.username, args.password)
-        print(token)
-    except Exception as e:
-        print('ERROR:', e)
-
-if __name__ == "__main__":
-    main()
-```
-
-```js
-// Node.js
-
-const axios = require('axios');
-const CryptoJS = require('crypto-js');
-const { CookieJar } = require('tough-cookie');
-const { wrapper: axiosCookieJarSupport } = require('axios-cookiejar-support');
-const querystring = require('querystring');
-const { JSDOM } = require('jsdom');
+```javascript
+import axios from "axios";
+import crypto from "crypto";
+import { CookieJar } from "tough-cookie";
+import { wrapper } from "axios-cookiejar-support";
 
 const SSO_URL = "https://sso.fzu.edu.cn/login";
-const AUTH_URL = "https://sso.fzu.edu.cn/oauth2.0/authorize?response_type=code&client_id=wlwxt&redirect_uri=http://aiot.fzu.edu.cn/api/admin/sso/getIbsToken";
-const USER_AGENT = 'Mozilla/5.0 (iPad; CPU OS 18_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 appId/cn.edu.fzu.fdxypa appScheme/kysk-fdxy-app hengfeng/fdxyappzs appType/2 ruijie-facecamera';
+const AUTH_URL =
+  "https://sso.fzu.edu.cn/oauth2.0/authorize?response_type=code&client_id=wlwxt&redirect_uri=http://aiot.fzu.edu.cn/api/admin/sso/getIbsToken";
 
-class SSOLogin {
-    constructor() {
-        this.jar = new CookieJar();
-        this.session = axios.create({
-            jar: this.jar,
-            withCredentials: true,
-            headers: {
-                'User-Agent': USER_AGENT
-            },
-            maxRedirects: 10,
-            validateStatus: function (status) {
-                return status >= 200 && status < 400;
-            },
-        });
-        axiosCookieJarSupport(this.session);
-    }
+const USER_AGENT =
+  "Mozilla/5.0 (iPad; CPU OS 18_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 appId/cn.edu.fzu.fdxypa appScheme/kysk-fdxy-app hengfeng/fdxyappzs appType/2 ruijie-facecamera";
 
-    extractKv(rawText, key) {
-        if (typeof rawText !== 'string') {
-            throw new Error("Input must be a string");
-        }
-        const pattern = new RegExp(`${key}=([^;&]+)`);
-        const match = rawText.match(pattern);
-        if (!match) {
-            return null;
-        }
-        return match[1];
-    }
+/* -------- utils -------- */
 
-    encryptPassword(rawPassword, keyBase64) {
-        const key = CryptoJS.enc.Base64.parse(keyBase64);
-        const encrypted = CryptoJS.AES.encrypt(rawPassword, key, {
-            mode: CryptoJS.mode.ECB,
-            padding: CryptoJS.pad.Pkcs7
-        });
-        return encrypted.toString();
-    }
-
-    async login(account, password) {
-        if (!account || !password) {
-            throw new Error("Username and password cannot be empty");
-        }
-
-        const response = await this.session.get(SSO_URL);
-        const html = response.data;
-        const dom = new JSDOM(html);
-        const document = dom.window.document;
-
-        const cryptoEl = document.getElementById('login-croypto');
-        const executionEl = document.getElementById('login-page-flowkey');
-
-        if (!cryptoEl || !executionEl) {
-            throw new Error("Could not extract crypto/execution keys from the page. The SSO page may have changed.");
-        }
-
-        const crypto = cryptoEl.textContent;
-        const execution = executionEl.textContent;
-
-        const encryptedPassword = this.encryptPassword(password, crypto);
-        const captchaPayload = this.encryptPassword('{}', crypto);
-
-        const loginData = {
-            'username': account,
-            'type': 'UsernamePassword',
-            '_eventId': 'submit',
-            'geolocation': '',
-            'execution': execution,
-            'captcha_code': '',
-            'croypto': crypto,
-            'password': encryptedPassword,
-            'captcha_payload': captchaPayload
-        };
-
-        const loginResponse = await this.session.post(SSO_URL, querystring.stringify(loginData), {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        });
-
-        const cookies = await this.jar.getCookies(SSO_URL);
-        const tgcCookie = cookies.find(cookie => cookie.key === 'SOURCEID_TGC');
-
-        if (tgcCookie) {
-            return `SOURCEID_TGC=${tgcCookie.value}`;
-        }
-        
-        const errorDom = new JSDOM(loginResponse.data);
-        const errorMsg = errorDom.window.document.getElementById('msg')?.textContent.trim();
-        if (errorMsg) {
-            throw new Error(`Login failed. Server message: "${errorMsg}"`);
-        }
-        throw new Error('Incorrect username or password, or login failed.');
-    }
-
-    async getStudyToken(ssoCookie) {
-        if (!ssoCookie) {
-            throw new Error("SSO cookie is required. Please log in first.");
-        }
-
-        const response = await this.session.get(AUTH_URL, {
-            headers: {
-                'Cookie': ssoCookie
-            }
-        });
-
-        const finalUrl = response.request.res.responseUrl || response.config.url;
-        const token = this.extractKv(finalUrl, 'token');
-
-        if (token) {
-            return token;
-        }
-        
-        throw new Error("Token not found in the final redirected URL");
-    }
-
-    async getLearningCenterToken(account, password) {
-        const ssoCookie = await this.login(account, password);
-        return await this.getStudyToken(ssoCookie);
-    }
+function extractKV(rawText, key) {
+  const re = new RegExp(`${key}=([^;&]+)`);
+  const m = rawText.match(re);
+  if (!m) throw new Error(`未找到键: ${key}`);
+  return m[1];
 }
 
-async function main() {
-    const args = process.argv.slice(2);
-    const usernameIndex = 832403323;
-    const passwordIndex = args.indexOf('--password');
-    let username = null;
-    let password = null;
-
-    if (usernameIndex !== -1 && args[usernameIndex + 1]) {
-        username = args[usernameIndex + 1];
-    }
-    
-    if (passwordIndex !== -1 && args[passwordIndex + 1]) {
-        password = args[passwordIndex + 1];
-    }
-
-    if (!username || !password) {
-        console.log("Usage: node sso-login.js --username <your_username> --password '<your_password>'");
-        return;
-    }
-
-    const sso = new SSOLogin();
-    try {
-        const token = await sso.getLearningCenterToken(username, password);
-        console.log(token);
-    } catch (e) {
-        console.error('ERROR:', e.message);
-    }
+function encryptPassword(rawPassword, keyBase64) {
+  const key = Buffer.from(keyBase64, "base64");
+  const cipher = crypto.createCipheriv("aes-128-ecb", key, null);
+  cipher.setAutoPadding(true); // PKCS#7
+  const encrypted = Buffer.concat([
+    cipher.update(rawPassword, "utf8"),
+    cipher.final(),
+  ]);
+  return encrypted.toString("base64");
 }
 
-if (require.main === module) {
-    main();
+/* -------- main function -------- */
+
+export async function getLearningCenterToken(username, password) {
+  if (!username || !password) throw new Error("账号密码不能为空");
+
+  const jar = new CookieJar();
+  const client = wrapper(
+    axios.create({
+      jar,
+      withCredentials: true,
+      headers: { "User-Agent": USER_AGENT },
+      maxRedirects: 10,
+      validateStatus: (s) => s >= 200 && s < 400,
+    })
+  );
+
+  /* 1. GET 登录页 */
+  const pageResp = await client.get(SSO_URL);
+  const html = pageResp.data;
+
+  const cryptoMatch = html.match(/"login-croypto">(.*?)</);
+  const executionMatch = html.match(/"login-page-flowkey">(.*?)</);
+  if (!cryptoMatch || !executionMatch) {
+    throw new Error("无法提取 crypto / execution");
+  }
+
+  const cryptoKey = cryptoMatch[1];
+  const execution = executionMatch[1];
+
+  const setCookie = pageResp.headers["set-cookie"]?.join("; ") ?? "";
+  const sessionVal = extractKV(setCookie, "SESSION");
+
+  /* 2. POST 登录 */
+  const form = new URLSearchParams({
+    username,
+    type: "UsernamePassword",
+    _eventId: "submit",
+    geolocation: "",
+    execution,
+    captcha_code: "",
+    croypto: cryptoKey,
+    password: encryptPassword(password, cryptoKey),
+    captcha_payload: encryptPassword("{}", cryptoKey),
+  });
+
+  await client.post(SSO_URL, form.toString(), {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Cookie: `SESSION=${sessionVal}`,
+    },
+  });
+
+  /* 3. 拿 SOURCEID_TGC */
+  const cookies = await jar.getCookies(SSO_URL);
+  const tgc = cookies.find((c) => c.key === "SOURCEID_TGC");
+  if (!tgc) throw new Error("学号或密码错误");
+
+  /* 4. OAuth 跳转拿 token */
+  const authResp = await client.get(AUTH_URL, {
+    headers: {
+      Cookie: `SOURCEID_TGC=${tgc.value}`,
+    },
+  });
+
+  const finalUrl =
+    authResp?.request?.res?.responseUrl ?? authResp.config.url;
+
+  if (!finalUrl.includes("token=")) {
+    throw new Error("未在最终 URL 中找到 token");
+  }
+
+  return extractKV(finalUrl, "token");
 }
 ```
 
